@@ -1,0 +1,49 @@
+{
+  "name": "rebase-atelier",
+  "version": "0.1.0",
+  "description": "An intentional terminal workspace for rewriting Git, Arc, Mercurial and Jujutsu history.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/St1ggy/rebase-editor.git"
+  },
+  "engines": {
+    "bun": ">=1.4.0",
+    "node": ">=24.16.0"
+  },
+  "scripts": {
+    "dev": "bun src/main.ts",
+    "test": "bun test",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "typecheck": "oxlint --type-aware --type-check .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "build": "bun scripts/build.ts",
+    "build:release": "bun scripts/build.ts --release",
+    "deps:release": "bun install --os '*' --cpu '*' --frozen-lockfile",
+    "package:release": "bun scripts/package-release.ts",
+    "smoke:npm": "bun scripts/smoke-npm.ts",
+    "publish:release": "bun scripts/publish-release.ts",
+    "smoke": "bun dist/atelier.js --help",
+    "check": "bun run typecheck && bun run format:check && bun test && bun run build && bun run smoke"
+  },
+  "dependencies": {
+    "@opentui/core": "0.5.14",
+    "@opentui/solid": "0.5.14",
+    "node-diff3": "3.2.0",
+    "solid-js": "1.9.12",
+    "string-width": "7.2.0",
+    "web-tree-sitter": "0.25.10"
+  },
+  "devDependencies": {
+    "@st1ggy/linter-config": "8.0.0",
+    "@types/bun": "1.4.1",
+    "eslint-plugin-solid": "0.18.0",
+    "oxfmt": "0.71.0",
+    "oxlint": "1.86.0",
+    "oxlint-tsgolint": "7.0.2003"
+  }
+}

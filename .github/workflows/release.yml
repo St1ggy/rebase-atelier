@@ -1,0 +1,136 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag (for example v0.1.0)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  verify:
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ inputs.tag || github.ref_name }}
+
+  build:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: bun install --os '*' --cpu '*' --frozen-lockfile
+      - run: bun run build:release
+      - run: npm run package:release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rebase-editor-release
+          path: |
+            artifacts/rebase-editor-*
+            artifacts/SHA256SUMS.txt
+            release/packages.json
+            release/tarballs/*.tgz
+          if-no-files-found: error
+          compression-level: 0
+
+  smoke:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-x64
+          - os: macos-latest
+            platform: darwin-arm64
+          - os: macos-15-intel
+            platform: darwin-x64
+          - os: windows-latest
+            platform: win32-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/download-artifact@v4
+        with:
+          name: rebase-editor-release
+      - run: npm run smoke:npm
+        env:
+          NPM_PTY_SMOKE: '1'
+
+  npm:
+    needs: [build, smoke]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+      - run: npm install --global npm@11.17.0
+      - uses: actions/download-artifact@v4
+        with:
+          name: rebase-editor-release
+      - run: npm run publish:release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  github:
+    needs: [build, smoke]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: rebase-editor-release
+      - name: Publish binaries and npm tarballs to GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" artifacts/rebase-editor-* artifacts/SHA256SUMS.txt release/tarballs/*.tgz --clobber
+          else
+            gh release create "$RELEASE_TAG" artifacts/rebase-editor-* artifacts/SHA256SUMS.txt release/tarballs/*.tgz --verify-tag --title "Rebase Atelier $RELEASE_TAG" --generate-notes --notes "Install: npm install -g @st1ggy/rebase-editor. Command: rebase-editor. Inspired by https://github.com/sjurba/rebase-editor."
+          fi
