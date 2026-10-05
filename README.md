@@ -1,6 +1,8 @@
 # Rebase Atelier
 
-A keyboard-driven history editor for Git, Arc, Mercurial, and Jujutsu.
+A terminal history editor for **Git, Arc, Mercurial, and Jujutsu**.
+
+Reorder, squash, fixup, edit, or drop commits. Inspect diffs, undo changes, and resolve conflicts with a three-way editor.
 
 ## Install
 
@@ -9,21 +11,49 @@ npm install --global rebase-atelier
 rebase-atelier --demo
 ```
 
-Requires Node.js 20+ and a native VCS client. Standalone binaries include the Bun runtime.
+Requires Node.js 20+ and a native VCS client. Available for macOS ARM64/x64, Linux x64 (glibc), and Windows x64. [Standalone binaries](https://github.com/St1ggy/rebase-atelier/releases) include the Bun runtime.
 
 ## Usage
 
 ```sh
-rebase-atelier --vcs git
-rebase-atelier --vcs hg --cwd /path/to/repository
+rebase-atelier                              # Detect the current workspace
+rebase-atelier --vcs jj --cwd /path/to/repo  # Select a VCS and workspace
+```
+
+Use as a Git interactive rebase editor:
+
+```sh
 GIT_SEQUENCE_EDITOR='rebase-atelier --vcs git --sequence-editor' git rebase -i HEAD~5
 ```
 
-Arrow keys navigate and move commits. Use `p/r/e/s/f/d` for actions, `z/Z` for undo/redo, `Ctrl+P` for commands, and `Ctrl+S` to apply.
+## Keyboard
 
-Compact is the default display. F2 switches Full, Compact, and Minimal. Preferences are saved globally in `~/.config/rebase-atelier/config.json` or `$XDG_CONFIG_HOME/rebase-atelier/config.json`.
+| Key                   | Action                                       |
+| --------------------- | -------------------------------------------- |
+| ↑ / ↓                 | Navigate                                     |
+| Space / g             | Select commits / a fold group                |
+| ← / →                 | Move selected commits                        |
+| p / r / e / s / f / d | Pick / reword / edit / squash / fixup / drop |
+| z / Z                 | Undo / redo                                  |
+| Tab                   | Focus the inspector                          |
+| Ctrl+P                | Command palette                              |
+| Ctrl+S                | Apply or save                                |
+| ?                     | Help                                         |
+| Ctrl+C                | Cancel                                       |
+
+## Display
+
+- **Compact** (default): single-line commits and an on-demand inspector.
+- **Full**: summary, groups, and a persistent inspector on wide terminals.
+- **Minimal**: action, hash, and subject only.
+
+Switch with **F2** or `--view full|compact|minimal`. The choice is saved globally in `$XDG_CONFIG_HOME/rebase-atelier/config.json`, defaulting to `~/.config/rebase-atelier/config.json`.
+
+Colors follow the terminal palette. Nerd icons are enabled by default; choose a Nerd Font or use `--icons unicode` / `--icons ascii`.
 
 ## Development
+
+Requires Bun 1.4+, Node.js 24.16+, Mercurial, and Jujutsu.
 
 ```sh
 bun install --frozen-lockfile
@@ -31,7 +61,7 @@ bun run dev -- --demo
 bun run check
 ```
 
-See the [interface guide](docs/interface.md), [VCS support](docs/vcs-support.md), and [release guide](docs/releasing.md).
+[Interface](docs/interface.md) · [VCS support and limitations](docs/vcs-support.md) · [Releases](docs/releasing.md)
 
 ## Credits
 
