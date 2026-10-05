@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing version tag (for example v0.1.0)
+        description: Existing version tag (for example v0.1.1)
         required: true
         type: string
 
@@ -44,9 +44,9 @@ jobs:
       - run: npm run package:release
       - uses: actions/upload-artifact@v4
         with:
-          name: rebase-editor-release
+          name: rebase-atelier-release
           path: |
-            artifacts/rebase-editor-*
+            artifacts/rebase-atelier-*
             artifacts/SHA256SUMS.txt
             release/packages.json
             release/tarballs/*.tgz
@@ -83,7 +83,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/download-artifact@v4
         with:
-          name: rebase-editor-release
+          name: rebase-atelier-release
       - run: npm run smoke:npm
         env:
           NPM_PTY_SMOKE: '1'
@@ -108,7 +108,7 @@ jobs:
       - run: npm install --global npm@11.17.0
       - uses: actions/download-artifact@v4
         with:
-          name: rebase-editor-release
+          name: rebase-atelier-release
       - run: npm run publish:release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -124,13 +124,13 @@ jobs:
           ref: ${{ env.RELEASE_TAG }}
       - uses: actions/download-artifact@v4
         with:
-          name: rebase-editor-release
+          name: rebase-atelier-release
       - name: Publish binaries and npm tarballs to GitHub Releases
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" artifacts/rebase-editor-* artifacts/SHA256SUMS.txt release/tarballs/*.tgz --clobber
+            gh release upload "$RELEASE_TAG" artifacts/rebase-atelier-* artifacts/SHA256SUMS.txt release/tarballs/*.tgz --clobber
           else
-            gh release create "$RELEASE_TAG" artifacts/rebase-editor-* artifacts/SHA256SUMS.txt release/tarballs/*.tgz --verify-tag --title "Rebase Atelier $RELEASE_TAG" --generate-notes --notes "Install: npm install -g @st1ggy/rebase-editor. Command: rebase-editor. Inspired by https://github.com/sjurba/rebase-editor."
+            gh release create "$RELEASE_TAG" artifacts/rebase-atelier-* artifacts/SHA256SUMS.txt release/tarballs/*.tgz --verify-tag --title "Rebase Atelier $RELEASE_TAG" --generate-notes --notes "Standalone binaries for macOS ARM64/x64, Linux x64 and Windows x64. Command: rebase-atelier. npm package: rebase-atelier. Inspired by https://github.com/sjurba/rebase-editor."
           fi

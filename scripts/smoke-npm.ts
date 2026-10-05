@@ -18,7 +18,7 @@ const tarballs = names.map((name) => {
 
   return path.resolve('release', packageInfo.tarball)
 })
-const directory = await mkdtemp(path.join(tmpdir(), 'rebase-editor-npm-'))
+const directory = await mkdtemp(path.join(tmpdir(), 'rebase-atelier-npm-'))
 
 try {
   await npm(
@@ -35,15 +35,15 @@ try {
     ],
     directory,
   )
-  const launcher = path.join(directory, 'node_modules', '@st1ggy', 'rebase-editor', 'bin', 'rebase-editor.mjs')
+  const launcher = path.join(directory, 'node_modules', npmName, 'bin', 'rebase-atelier.mjs')
   const version = await checked('node', [launcher, '--version'], { cwd: directory })
   const help = await checked('node', [launcher, '--help'], { cwd: directory })
 
-  if (version.trim() !== manifest.version || !help.includes('rebase-editor --'))
+  if (version.trim() !== manifest.version || !help.includes('rebase-atelier --'))
     throw new Error('Installed npm command failed smoke checks')
 
   if (process.platform !== 'win32' && process.env.NPM_PTY_SMOKE === '1') {
-    const executable = path.join(directory, 'node_modules', '.bin', 'rebase-editor')
+    const executable = path.join(directory, 'node_modules', '.bin', 'rebase-atelier')
 
     process.stdout.write(
       await checked('python3', ['scripts/pty-smoke.py'], {

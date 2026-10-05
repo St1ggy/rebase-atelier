@@ -17,9 +17,9 @@ All four adapters are implemented. Acceptance is deliberately distinguished from
 
 - macOS arm64: Bun 1.4.2, Node 24.19.0; native renderer and keyboard tests run locally.
 - macOS arm64: source-mode PTY runs plan/message editors, text/binary resolution and full Git workflow from foreign cwd; canonical/echo flags are restored.
-- Four standalone artifacts cross-compile; the macOS arm64 executable passes real PTY acceptance for native-plan/message/text/binary editors and the parent/child Git workflow.
-- Linux and Windows binaries are produced, but production-terminal acceptance on these OSes is not established by cross-compilation.
-- CI is provided for macOS/Linux/Windows headless tests and native build smoke. A workflow file is not a claim that the remote jobs have run.
+- Four standalone artifacts cross-compile. GitHub Actions installation tests pass for macOS arm64/x64, Linux x64 and Windows x64. macOS and Linux packaged commands pass real PTY acceptance for native-plan/message/text/binary editors and the parent/child Git workflow.
+- Windows passes native headless UI/VCS tests and installed-command `--help`/`--version` smoke; interactive Windows console acceptance remains open.
+- Remote [CI acceptance](https://github.com/St1ggy/rebase-atelier/actions/runs/37279101690) passed for all supported platforms. Test commands explicitly use a 30-second per-test budget for slower native subprocess workflows on hosted runners.
 - Arc client availability and authenticated test infrastructure are separate from application portability.
 
 ## Arc probe notes

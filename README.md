@@ -5,8 +5,8 @@ A keyboard-driven history editor for Git, Arc, Mercurial, and Jujutsu.
 ## Install
 
 ```sh
-npm install --global @st1ggy/rebase-editor
-rebase-editor --demo
+npm install --global rebase-atelier
+rebase-atelier --demo
 ```
 
 Requires Node.js 20+ and a native VCS client. Standalone binaries include the Bun runtime.
@@ -14,9 +14,9 @@ Requires Node.js 20+ and a native VCS client. Standalone binaries include the Bu
 ## Usage
 
 ```sh
-rebase-editor --vcs git
-rebase-editor --vcs hg --cwd /path/to/repository
-GIT_SEQUENCE_EDITOR='rebase-editor --vcs git --sequence-editor' git rebase -i HEAD~5
+rebase-atelier --vcs git
+rebase-atelier --vcs hg --cwd /path/to/repository
+GIT_SEQUENCE_EDITOR='rebase-atelier --vcs git --sequence-editor' git rebase -i HEAD~5
 ```
 
 Arrow keys navigate and move commits. Use `p/r/e/s/f/d` for actions, `z/Z` for undo/redo, `Ctrl+P` for commands, and `Ctrl+S` to apply.

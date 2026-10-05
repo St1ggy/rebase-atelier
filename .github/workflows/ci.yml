@@ -60,7 +60,7 @@ jobs:
       - run: npm run package:release
       - uses: actions/upload-artifact@v4
         with:
-          name: rebase-editor-ci
+          name: rebase-atelier-ci
           path: |
             release/packages.json
             release/tarballs/*.tgz
@@ -89,7 +89,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/download-artifact@v4
         with:
-          name: rebase-editor-ci
+          name: rebase-atelier-ci
           path: release
       - run: npm run smoke:npm
         env:

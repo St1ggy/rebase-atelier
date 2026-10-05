@@ -59,11 +59,11 @@ const help = `Rebase Atelier ${version} — history, thoughtfully shaped
 Usage:
   bun run dev -- --demo                  Explore without touching a repository
   bun run dev -- [--vcs git|arc|hg|jj]    Open the current workspace
-  rebase-editor --vcs git --sequence-editor FILE
-  rebase-editor --vcs hg --editor FILE    Detect native plan versus message
-  rebase-editor --message-editor FILE    Edit a multiline message
-  rebase-editor --merge --base B --left L --right R --output O
-  rebase-editor --resume-jj               Resume an interrupted Atelier plan
+  rebase-atelier --vcs git --sequence-editor FILE
+  rebase-atelier --vcs hg --editor FILE   Detect native plan versus message
+  rebase-atelier --message-editor FILE   Edit a multiline message
+  rebase-atelier --merge --base B --left L --right R --output O
+  rebase-atelier --resume-jj             Resume an interrupted Atelier plan
 
 Options: --vcs KIND, --cwd PATH, --view full|compact|minimal, --icons nerd|unicode|ascii, --demo, --help, --version
 ATELIER_GIT / ATELIER_ARC / ATELIER_HG / ATELIER_JJ override native executables.

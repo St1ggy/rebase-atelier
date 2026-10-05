@@ -2,4 +2,3 @@ preload = ["@opentui/solid/preload"]
 
 [test]
 preload = ["./tests/setup.ts", "@opentui/solid/preload"]
-timeout = 30000

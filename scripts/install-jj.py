@@ -23,7 +23,7 @@ windows = sys.platform == "win32"
 extension = "zip" if windows else "tar.gz"
 filename = "jj.exe" if windows else "jj"
 url = f"https://github.com/jj-vcs/jj/releases/download/v{VERSION}/jj-v{VERSION}-{target}.{extension}"
-directory = pathlib.Path(os.environ["RUNNER_TEMP"]) / "rebase-editor-tools"
+directory = pathlib.Path(os.environ["RUNNER_TEMP"]) / "rebase-atelier-tools"
 directory.mkdir(parents=True, exist_ok=True)
 destination = directory / filename
 

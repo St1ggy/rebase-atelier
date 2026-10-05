@@ -34,7 +34,7 @@ for (const target of releaseTargets) {
   const name = `${npmName}-${target.id}`
   const directory = path.join(output, 'npm', target.id)
   const bin = path.join(directory, 'bin')
-  const filename = target.os === 'win32' ? 'rebase-editor.exe' : 'rebase-editor'
+  const filename = target.os === 'win32' ? 'rebase-atelier.exe' : 'rebase-atelier'
   const asset = path.resolve('artifacts', target.asset)
 
   await mkdir(bin, { recursive: true })
@@ -43,7 +43,7 @@ for (const target of releaseTargets) {
   await copyFile('LICENSE', path.join(directory, 'LICENSE'))
   await writeFile(
     path.join(directory, 'README.md'),
-    `# ${name}\n\nNative binary for [Rebase Atelier](${repoUrl}) on ${target.id}. Install \`${npmName}\` to get the \`rebase-editor\` command.\n`,
+    `# ${name}\n\nNative binary for [Rebase Atelier](${repoUrl}) on ${target.id}. Install \`${npmName}\` to get the \`rebase-atelier\` command.\n`,
   )
   await writeFile(
     path.join(directory, 'package.json'),
@@ -57,11 +57,11 @@ for (const target of releaseTargets) {
   packages.push({ name, directory })
 }
 
-const directory = path.join(output, 'npm', 'rebase-editor')
+const directory = path.join(output, 'npm', npmName)
 
 await mkdir(path.join(directory, 'bin'), { recursive: true })
-await copyFile('bin/rebase-editor.mjs', path.join(directory, 'bin', 'rebase-editor.mjs'))
-await chmod(path.join(directory, 'bin', 'rebase-editor.mjs'), 0o755)
+await copyFile('bin/rebase-atelier.mjs', path.join(directory, 'bin', 'rebase-atelier.mjs'))
+await chmod(path.join(directory, 'bin', 'rebase-atelier.mjs'), 0o755)
 await copyFile('README.md', path.join(directory, 'README.md'))
 await copyFile('LICENSE', path.join(directory, 'LICENSE'))
 const optionalDependencies = Object.fromEntries(
@@ -75,7 +75,7 @@ await writeFile(
       ...common,
       name: npmName,
       engines: { node: '>=20' },
-      bin: { 'rebase-editor': 'bin/rebase-editor.mjs' },
+      bin: { 'rebase-atelier': 'bin/rebase-atelier.mjs' },
       files: ['bin'],
       keywords: ['rebase', 'git', 'arc', 'mercurial', 'jujutsu', 'tui', 'editor'],
       optionalDependencies,

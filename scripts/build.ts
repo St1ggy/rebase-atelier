@@ -26,7 +26,7 @@ if (release) {
     plugins: [solidPlugin],
     target: 'bun',
     outdir: 'dist',
-    naming: 'atelier.js',
+    naming: 'rebase-atelier.js',
     external: ['@opentui/core'],
     sourcemap: 'linked',
   })

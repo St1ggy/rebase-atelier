@@ -8,19 +8,19 @@ const platform = `${process.platform}-${process.arch}`
 const supported = ['darwin-arm64', 'darwin-x64', 'linux-x64', 'win32-x64']
 
 if (!supported.includes(platform)) {
-  process.stderr.write(`rebase-editor: unsupported platform ${platform}. Supported: ${supported.join(', ')}.\n`)
+  process.stderr.write(`rebase-atelier: unsupported platform ${platform}. Supported: ${supported.join(', ')}.\n`)
   process.exit(1)
 }
 
-const packageName = `@st1ggy/rebase-editor-${platform}`
-const filename = process.platform === 'win32' ? 'rebase-editor.exe' : 'rebase-editor'
+const packageName = `rebase-atelier-${platform}`
+const filename = process.platform === 'win32' ? 'rebase-atelier.exe' : 'rebase-atelier'
 let binary
 
 try {
   binary = require.resolve(`${packageName}/bin/${filename}`)
 } catch {
   process.stderr.write(
-    `rebase-editor: missing ${packageName}. Reinstall @st1ggy/rebase-editor with optional dependencies enabled (npm install --include=optional).\n`,
+    `rebase-atelier: missing ${packageName}. Reinstall rebase-atelier with optional dependencies enabled (npm install --include=optional).\n`,
   )
   process.exit(1)
 }
@@ -38,7 +38,7 @@ process.on('SIGINT', interrupt)
 process.on('SIGTERM', terminate)
 process.on('SIGHUP', hangup)
 child.on('error', (error) => {
-  process.stderr.write(`rebase-editor: ${error.message}\n`)
+  process.stderr.write(`rebase-atelier: ${error.message}\n`)
   process.exitCode = 1
 })
 child.on('exit', (code, signal) => {
